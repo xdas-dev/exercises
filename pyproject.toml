@@ -1,0 +1,22 @@
+[project]
+name = "xdas-exercises"
+version = "0.1.0"
+description = "Hands-on exercises for the Xdas library, on a minimal DAS dataset."
+requires-python = ">=3.11"
+dependencies = [
+    "ipykernel",
+    "jupyterlab",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "scipy",
+    "xdas>=0.2.10",
+]
+
+[tool.uv]
+# The exercises are a set of notebooks, not a library: install what they need,
+# but do not install this directory itself.
+package = false
+# Keep uv from backtracking numba (pulled in by xdas) to ancient unbuildable
+# versions; recent numba caps numpy, so numpy must be the one to backtrack.
+constraint-dependencies = ["numba>=0.60"]

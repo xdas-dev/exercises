@@ -1,0 +1,8 @@
+data
+data.zip
+abyss.nc
+.venv
+__pycache__/
+.ipynb_checkpoints/
+solutions/
+.tmp/
