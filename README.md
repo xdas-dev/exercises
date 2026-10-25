@@ -17,7 +17,7 @@ earthquake that occurred between them on 2024-09-02 at 02:56 UTC.
 | [1](1_preparation.ipynb) | Open the DAS records, inspect them, attach the cable geometry, draw a map |
 | [2](2_exploration.ipynb) | Physical units, FK analysis, filtering, Wood–Anderson, STA/LTA picking, location and magnitude |
 | [3](3_chunks.ipynb) | Turn the processing into atoms, write a continuous STA/LTA, pick chunk by chunk, locate from a stream of picks |
-| [4](4_realtime.ipynb) | Real time: receive packets over ZeroMQ, pick them as they arrive, draw a live waterfall and locate |
+| [4](4_realtime.ipynb) | Real time: receive packets over ZeroMQ, pick them as they arrive, follow the location live on a dashboard |
 
 Run them in order: notebook 1 writes `abyss.nc`, which the next ones read.
 The course takes about three hours.
@@ -59,16 +59,24 @@ as if they were live, over ZeroMQ, as an ASN OptoDAS interrogator would,
 stamped with the current UTC time:
 
 ```
-uv run replay.py
+uv run replay.py --waterfall
 ```
+
+`--waterfall` also shows the last minute of both cables in a window (optional). Press `e`
+to jump to just before the earthquake.
 
 | Stream | Address | Array |
 |---|---|---|
-| SER/N | `tcp://localhost:5556` | `(time, distance)`, 100 Hz, packets of 0.24 s |
-| SER/S | `tcp://localhost:5557` | `(time, distance)`, 62.5 Hz, packets of 0.384 s |
+| SER/N | `tcp://localhost:5556` | `(time, distance)`, 100 Hz, packets of 24 samples (0.24 s) |
+| SER/S | `tcp://localhost:5557` | `(time, distance)`, 62.5 Hz, packets of 24 samples (0.384 s) |
 
 The records loop every 3.5 min, so the earthquake comes back at every loop.
 `--speedup 2` plays twice as fast as real time.
+
+Avoid combining `--speedup` with `--waterfall`: the window is redrawn at every
+packet, and with more packets per second the drawing cannot keep up, so the
+stream lags behind its own timestamps and packets arrive late and in bursts.
+Use one or the other.
 
 ## Keeping up to date
 

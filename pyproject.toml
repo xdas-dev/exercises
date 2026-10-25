@@ -9,6 +9,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "pandas",
+    "plotly>=7.1.0",
     "scipy",
     "xdas>=0.2.10",
 ]
